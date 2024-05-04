@@ -1,6 +1,5 @@
 (ns mba-fiap.adapter.http.server
   (:require
-    [clojure.data.json :as json]
     [integrant.core :as ig]
     [io.pedestal.http :as http]
     [io.pedestal.http.route :as route]
@@ -18,11 +17,6 @@
 (defn tap-interceptor
   []
   (interceptor/interceptor {:enter #(doto % tap>)}))
-
-
-(def parse-json-body-interceptor
-  (interceptor/interceptor {:name ::parse-json-body
-                            :leave #(update % :body json/write-str)}))
 
 
 (def tap-error-interceptor
@@ -58,7 +52,7 @@
              ::http/port port
              ::http/host "0.0.0.0"}
       :always http/default-interceptors
-      :always (add-interceptors ctx-interceptor parse-json-body-interceptor (tap-interceptor))
+      :always (add-interceptors ctx-interceptor http/json-body (tap-interceptor))
       (or (= :dev env)
           (= :test env)) (-> http/dev-interceptors
                              (add-interceptors tap-error-interceptor))
@@ -71,4 +65,3 @@
 
 (defmethod ig/halt-key! ::server [_ server]
   (http/stop server))
-
