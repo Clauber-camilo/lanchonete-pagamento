@@ -1,5 +1,6 @@
 (ns user
   (:require
+    [hato.client :as hc]
     [integrant.repl :as r]
     [integrant.repl.state]
     [mba-fiap.pagamento :as pagamento]))
@@ -22,3 +23,11 @@
            (require '[portal.api :as api])
            (add-tap api/submit)
            (api/open))))
+
+
+(defn listar-pagamento
+  [id]
+  (hc/get (str "http://localhost:8000/pagamento/" id)))
+
+
+(comment (listar-pagamento 1234))

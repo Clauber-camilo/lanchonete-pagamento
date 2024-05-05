@@ -4,7 +4,8 @@
     [aero.core :as aero]
     [clojure.java.io :as io]
     [com.brunobonacci.mulog :as log]
-    [integrant.core :as ig]))
+    [integrant.core :as ig]
+    [mba-fiap.datasource.pagamento]))
 
 
 (def ^:const system-filename "config.edn")

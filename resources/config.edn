@@ -1,8 +1,24 @@
-{:mba-fiap.adapter.http.server/server
+{:mba-fiap.datasource.mongo/db
+ {:spec {:uri #profile {:dev "mongodb://root:example@localhost:27017/"
+                        :test "mongodb://root:example@localhost:27017/"
+                        :prod #env MONGO_URI}
+         :db-name #profile {:dev "fiap-lanchonete-pagamento"
+                            :test "fiap-lanchonete-pagamento-test"
+                            :prod #env MONGO_DB}
+         :collection-name #profile {:dev "pagamento"
+                                    :test "pagamento-test"
+                                    :prod #env MONGO_COLLECTION}}}
+
+ [:mba-fiap.repository.repository/repository :repository/pagamento]
+ {:repository-name :pagamento
+  :connection #ig/ref :mba-fiap.datasource.mongo/db}
+
+
+ :mba-fiap.adapter.http.server/server
  {:env #profile {:default :dev
                  :test :test
                  :prod :prod}
   :port #long #profile {:default #or [#env HTTP_PORT 8000]}
   :join? #profile {:default true
                    :dev false}
-  :app-context {:test "test"}}}
+  :app-context {:repository/pagamento #ig/ref :repository/pagamento}}}
