@@ -24,14 +24,12 @@
 (defn prep-config
   [profile]
   (let [config-map (read-config profile)]
-    (tap> config-map)
     (ig/load-namespaces config-map)
     (ig/prep config-map)))
 
 
 (defn start-app
   [profile]
-  (tap> profile)
   (log/start-publisher! {:type :console})
   (-> (prep-config profile)
       (ig/init)))

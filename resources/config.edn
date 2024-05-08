@@ -1,6 +1,6 @@
 {:mba-fiap.datasource.mongo/db
- {:spec {:uri #profile {:dev "mongodb://root:example@localhost:27017/"
-                        :test "mongodb://root:example@localhost:27017/"
+ {:spec {:uri #profile {:dev "mongodb://root:example@localhost:27017/admin"
+                        :test "mongodb://root:example@localhost:27017/admin"
                         :prod #env MONGO_URI}
          :db-name #profile {:dev "fiap-lanchonete-pagamento"
                             :test "fiap-lanchonete-pagamento-test"

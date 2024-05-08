@@ -10,7 +10,8 @@
 
   (let [uri (get-in spec [:uri])
         db-name (get-in spec [:db-name])
-        {:keys [conn db]} (mg/connect-via-uri (str uri db-name))]
+        {:keys [conn]} (mg/connect-via-uri uri)
+        db (mg/get-db conn db-name)]
 
     (assoc
       spec
@@ -19,5 +20,5 @@
 
 
 (defmethod ig/resolve-key ::db
-  [_ {:keys [datasource]}]
-  datasource)
+  [_ {:keys [db]}]
+  db)

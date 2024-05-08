@@ -1,10 +1,11 @@
 (ns mba-fiap.datasource.pagamento
   (:require
-    [mba-fiap.repository.repository :as repository]))
+    [mba-fiap.repository.repository :as repository]
+    [monger.collection :as mc]))
 
 
 (defrecord PagamentoDatasource
-  [connection]
+  [db]
 
   repository/Repository
 
@@ -16,8 +17,11 @@
   (buscar
     [_ id]
     (println "Buscando pagamento")
-    {:sucess true
-     :id id})
+    (let [insert (mc/save-and-return db "pagamento" {:id-pedido "4321"})]
+
+      {:sucess true
+       :id id
+       :result (update insert :_id str)}))
 
 
   (listar [_ q] (println "Listando pagamentos"))
@@ -35,5 +39,4 @@
 
 (defmethod repository/make-repository :pagamento
   [{:keys [connection]}]
-  (tap> [::connection connection])
   (->PagamentoDatasource connection))

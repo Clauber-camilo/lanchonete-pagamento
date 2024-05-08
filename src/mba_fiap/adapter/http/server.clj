@@ -7,12 +7,6 @@
     [mba-fiap.adapter.pagamento-rest :as pagamento-rest]))
 
 
-;; (defn context-interceptor
-;;   [context]
-;;   (interceptor/interceptor
-;;     {:name ::include-context
-;;      :enter #(assoc % :app-context context)}))
-
 (defn context-interceptor
   [context]
   (interceptor/interceptor
