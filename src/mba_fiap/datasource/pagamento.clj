@@ -28,7 +28,11 @@
       pagamento))
 
 
-  (listar [_ q] (println "Listando pagamentos"))
+  (listar
+    [_ q]
+    (let [pagamentos (mc/find-maps db "pagamento" q)
+          _ (tap> pagamentos)]
+      pagamentos))
 
 
   (atualizar
