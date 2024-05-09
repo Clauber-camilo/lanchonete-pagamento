@@ -35,7 +35,8 @@
 
 
 (comment
-   (.listar (repository :repository/pagamento) {})
+   (reset-all)
+   (.listar (repository :repository/pagamento) {:status "pago"})
    (.criar (repository :repository/pagamento)
                  {:id-pedido #uuid"fbb98663-77ab-4560-a065-6b9b833c190f"
                   :status "em processamento"})
@@ -43,7 +44,9 @@
                    {:id-pedido #uuid"fbb98663-77ab-4560-a065-6b9b833c190f"
                     :status "pago"})
    (.buscar (repository :repository/pagamento)
-                   #uuid"fbb98663-77ab-4560-a065-6b9b833c190f"))
+                   #uuid"fbb98663-77ab-4560-a065-6b9b833c190f")
+  (.remover (repository :repository/pagamento)
+                  "1234"))
 
 
 (defn listar-pagamento

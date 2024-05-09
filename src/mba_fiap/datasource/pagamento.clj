@@ -51,7 +51,13 @@
 
   (remover
     [_ id]
-    (println "Removendo pagamento")))
+    (let [pagamento (mc/find-one-as-map db "pagamento" {:id-pedido id})
+          _ (tap> pagamento)]
+      (if (nil? pagamento)
+        (u/log ::pagamento_datasource, :msg "Pagamento não encontrado")
+        (let [id (:_id pagamento)
+              _ (mc/remove-by-id db "pagamento" id)]
+          true)))))
 
 
 (defmethod repository/make-repository :pagamento
