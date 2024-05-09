@@ -45,7 +45,7 @@
 
 (defn server
   [{:keys [env port join? app-context]}]
-  (println "Starting server")
+  (println ".:: Starting server ::.")
   (let [ctx-interceptor (context-interceptor app-context)]
     (cond-> {:env env
              ::http/routes (routes)

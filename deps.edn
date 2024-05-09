@@ -4,6 +4,7 @@
         com.novemberain/monger {:mvn/version "3.5.0"}
         integrant/integrant {:mvn/version "0.8.1"}
         integrant/repl {:mvn/version "0.3.3"}
+        metosin/malli {:mvn/version "0.16.1"}
         io.pedestal/pedestal.immutant {:mvn/version "0.6.3"}
         io.pedestal/pedestal.jetty {:mvn/version "0.6.3"}
         io.pedestal/pedestal.route   {:mvn/version "0.6.3"}

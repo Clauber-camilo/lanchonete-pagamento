@@ -30,6 +30,7 @@
 
 (defn start-app
   [profile]
+  (tap> "Starting app")
   (log/start-publisher! {:type :console})
   (-> (prep-config profile)
       (ig/init)))

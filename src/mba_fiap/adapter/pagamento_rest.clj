@@ -5,6 +5,11 @@
     [mba-fiap.service.pagamento :as pagamento.service]))
 
 
+;; (def default-interceptors
+;;   [(body-params/body-params)
+;;    middlewares/params
+;;    middlewares/keyword-params])
+
 (def default-interceptors
   [(body-params/body-params)
    middlewares/params
@@ -15,12 +20,11 @@
   "Routes definition for the api"
   []
   [["/pagamento/:id-pedido"
-    ^:interceptors default-interceptors
-    {:get `buscar-por-id-pedido}]
+    ^:interceptors `default-interceptors {:get `buscar-por-id-pedido}]
    ["/pagamento"
     ^:interceptors [(body-params/body-params)]
     {:post `criar-pagamento}]
-   ["/pagamento/:id-pedido" default-interceptors
+   ["/pagamento/:id-pedido" `default-interceptors
     {:put `atualizar-status-pagamento}]])
 
 
