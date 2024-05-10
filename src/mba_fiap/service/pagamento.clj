@@ -6,41 +6,27 @@
     (mba_fiap.repository.repository
       Repository)))
 
-
-(defn pagamento->response
-  [pagamento]
-  (let [[{:pagamento/keys [id id_pedido total status created_at]}] pagamento]
-    {:id id
-     :id-pedido id_pedido
-     :total total
-     :status status
-     :created-at created_at}))
-
-
 (defn criar-pagamento
   [^Repository repository pagamento]
-  (let [pagamento (.criar repository pagamento)
-        response (pagamento->response pagamento)]
-    response))
+  (let [pagamento (.criar repository pagamento)]
+    pagamento))
 
 
 (defn atualizar-status-pagamento
-  [^Repository repository id-pedido status]
+  [^Repository repository id-pagamento status]
   {:pre [(instance? Repository repository)
-         (uuid? id-pedido)
-         (validation/schema-check pagamento/Pagamento status)]}
-  (let [data {:id-pedido id-pedido :status status}
-        pagamento (.atualizar repository data)
-        response (pagamento->response pagamento)]
-
-    response))
+         (uuid? id-pagamento)
+         (validation/schema-check pagamento/Status status)]}
+  (let [pagamento (.buscar repository id-pagamento)
+        pagamento (assoc pagamento :status status)
+        pagamento (.atualizar repository pagamento)]
+    pagamento))
 
 
 (defn buscar-por-id-pedido
   [^Repository repository id-pedido]
   {:pre [(instance? Repository repository)]}
-  (let [pagamento (.buscar repository id-pedido)]
-    (tap> [::service pagamento])
+  (let [pagamento (.listar repository id-pedido)]
     (if (empty? pagamento)
       {:error "Pagamento não encontrado"}
       pagamento)))

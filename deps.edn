@@ -24,5 +24,11 @@
   :run-m {:main-opts ["-m" "mba-fiap.pagamento" "prod"]}
   :test {:extra-paths ["test"]
          :extra-deps {org.clojure/test.check {:mvn/version "1.1.1"}
-                      io.github.cognitect-labs/test-runner
-                      {:git/tag "v0.5.1" :git/sha "dfb30dd"}}}}}
+                      eftest/eftest {:mvn/version "0.5.9"}
+                      io.github.cognitect-labs/test-runner {:git/tag "v0.5.1" :git/sha "dfb30dd"}
+                      cloverage/cloverage {:mvn/version "1.2.2"}}
+         :exec-fn     cloverage.coverage/run-project
+         :exec-args {:test-ns-path ["test"]
+                     :src-ns-path ["src"]
+                     :runner :eftest
+                     :runner-opts {:fail-fast? true}}}}}

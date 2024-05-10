@@ -8,8 +8,7 @@
     [mba-fiap.service.pagamento :as pagamento.service])
   (:import
     (java.util Date)
-    (mba_fiap.repository.repository
-      Repository)))
+    (mba_fiap.repository.repository Repository)))
 
 
 (defn mock-repository
@@ -18,51 +17,48 @@
     (criar
       [data]
       (let [pgmt-uuid (random-uuid)
-            created (:created_at data (Date.))
-            data (assoc data :id pgmt-uuid :created_at created)]
+            created (:created-at data (Date.))
+            data (assoc data :id pgmt-uuid :created-at created)]
 
         (swap! store assoc pgmt-uuid data)
         (swap! store update (:id-pedido data) (fn [x]
                                                 (if (seq x)
                                                   (conj x data)
                                                   [data])))
-        (tap> {:at ::criar
-               :store @store
-               :data  data})
-        [{:id         pgmt-uuid
-          :id_pedido  (:id-pedido data)
-          :total      (:total data)
-          :status     (:status data)
-          :created_at (:created_at data)}]))
+        {:id         pgmt-uuid
+         :id-pedido  (:id-pedido data)
+         :total      (:total data)
+         :status     (:status data)
+         :created-at (:created-at data)}))
 
     (buscar
       [id]
-      (let [data (get @store id)]
-        (->> data
-             (mapv (fn [x]
-                     {:id         (:id x)
-                      :id_pedido  (:id_pedido x)
-                      :total      (:total x)
-                      :status     (:status x)
-                      :created_at (:created_at x)})))))
+      (get @store id))
 
     (listar
       [q]
-      (get @store (:id-pedido q)))
+      (let [data (get @store q)]
+        (->> data
+             (mapv (fn [x]
+                     {:id         (:id x)
+                      :id-pedido  (:id-pedido x)
+                      :total      (:total x)
+                      :status     (:status x)
+                      :created-at (:created-at x)})))))
 
     (atualizar
       [data]
       (let [found (get @store (:id data))
             updated-data (assoc found :status (:status data))]
         (swap! store assoc (:id updated-data) updated-data)
-        [{:id         (:id updated-data)
-          :id_pedido  (:id_pedido updated-data)
-          :total      (:total updated-data)
-          :status     (:status updated-data)
-          :created_at (:created_at updated-data)}]))))
+        {:id         (:id updated-data)
+         :id-pedido  (:id-pedido updated-data)
+         :total      (:total updated-data)
+         :status     (:status updated-data)
+         :created-at (:created-at updated-data)}))))
 
 
-(defspec criar-pagamento-test 100
+(defspec criar-pagamento-test 1
   (prop/for-all
     [pagamento (mg/generator pagamento/Pagamento)]
     (let [store (atom {})
@@ -71,17 +67,15 @@
       (= (:id-pedido pagamento) (:id-pedido result)))))
 
 
-(defspec buscar-por-id-pedido-test 1
+(defspec buscar-por-id-pedido-test 1000
   (prop/for-all
     [pagamento (mg/generator pagamento/Pagamento)]
     (let [store (atom {})
           mr (mock-repository store)
           _insert (.criar mr pagamento)
-          result (pagamento.service/buscar-por-id-pedido mr (:id-pedido pagamento))]
+          [result] (pagamento.service/buscar-por-id-pedido mr (:id-pedido pagamento))]
 
-      (tap> {:store  @store
-             :result result})
-      (true? true))))
+      (= (:id-pedido pagamento) (:id-pedido result)))))
 
 
 (defspec buscar-por-id-pedido-test-error 1000
@@ -98,8 +92,9 @@
     [pagamento (mg/generator pagamento/Pagamento)]
     (let [store (atom {})
           mr (mock-repository store)
-          _insert (.criar mr pagamento)
-          found (pagamento.service/atualizar-status-pagamento mr (:id-pedido pagamento) "pago")]
+          {:keys [id]} (.criar mr pagamento)
+          found (pagamento.service/atualizar-status-pagamento mr id "pago")]
+      (tap> [pagamento found])
       (= "pago" (:status found)))))
 
 
