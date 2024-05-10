@@ -5,7 +5,7 @@
     [clojure.tools.deps :as t]))
 
 
-(def lib 'net.clojars.mba-fiap/lanchonete)
+(def lib 'net.clojars.mba-fiap/lanchonete-pagamento)
 (def version "0.1.0-SNAPSHOT")
 
 

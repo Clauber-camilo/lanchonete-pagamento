@@ -5,7 +5,7 @@
     [integrant.core :as ig]))
 
 
-(def config (slurp "config.edn"))
+;; (def config (slurp "config.edn"))
 
 
 ;; (defmethod aero/reader 'ig/ref
@@ -35,11 +35,11 @@
 ;;         (ig/init))))
 ;;
 
-(defn exec
-  [args]
-  (println "exec migrations")
-  (println args)
-  (ig/init config))
+;; (defn exec
+;;   [args]
+;;   (println "exec migrations")
+;;   (println args)
+;;   (ig/init config))
 
 
 ;; (defn -main
