@@ -2,6 +2,7 @@
   (:require
     [com.brunobonacci.mulog :as log]
     [integrant.core :as ig]
+    [monger.command :as cmd]
     [monger.core :as mg]))
 
 
@@ -24,3 +25,12 @@
 (defmethod ig/resolve-key ::db
   [_ {:keys [db]}]
   db)
+
+
+(defn check-health
+  [db]
+  (tap> (cmd/db-stats db))
+
+  (if (cmd/db-stats db)
+    {:status "ok"}
+    {:status "error"}))

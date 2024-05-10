@@ -1,5 +1,6 @@
 (ns user
   (:require
+    [clojure.data.json :as json]
     [hato.client :as hc]
     [integrant.core :as ig]
     [integrant.repl :as r]
@@ -45,13 +46,34 @@
                     :status "pago"})
    (.buscar (repository :repository/pagamento)
                    #uuid"fbb98663-77ab-4560-a065-6b9b833c190f")
-  (.remover (repository :repository/pagamento)
+   (.remover (repository :repository/pagamento)
                   "1234"))
 
 
-(defn listar-pagamento
-  [id]
-  (hc/get (str "http://localhost:8000/pagamento/" id)))
+(comment (hc/get "http://localhost:8000/healthcheck"))
 
 
-(comment (listar-pagamento 1234))
+;; (def pagamento-payload
+;;   {:id-pedido "fbb98663-77ab-4560-a065-6b9b833c190f"
+;;    :status "em processamento"})
+;;
+;;
+;; (defn buscar-pagamento
+;;   [id]
+;;   (hc/get (str "http://localhost:8000/pagamento/" id)))
+;;
+;;
+;; (defn criar-pagamento
+;;   [pagamento]
+;;   (hc/post "http://localhost:8000/pagamento" {:body (json/write-str pagamento)}))
+;;
+;;
+;; (defn atualizar-pagamento
+;;   [id status]
+;;   (hc/put (str "http://localhost:8000/pagamento/" id) {:status status}))
+;;
+;;
+;; (comment
+;;          (criar-pagamento pagamento-payload)
+;;          (buscar-pagamento (:id-pedido pagamento-payload))
+;;          (atualizar-pagamento (:id-pedido pagamento-payload) "pago"))
