@@ -1,6 +1,5 @@
 (ns mba-fiap.datasource.mongo
   (:require
-    [com.brunobonacci.mulog :as log]
     [integrant.core :as ig]
     [monger.command :as cmd]
     [monger.core :as mg]))
