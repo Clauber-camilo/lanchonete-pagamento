@@ -12,7 +12,8 @@
   (let [uri (get-in spec [:uri])
         db-name (get-in spec [:db-name])
         {:keys [conn]} (mg/connect-via-uri uri)
-        db (mg/get-db conn db-name)]
+        db (mg/get-db conn db-name)
+        _ (tap> db)]
 
     (println ".:: DB initialized ::.")
     (assoc

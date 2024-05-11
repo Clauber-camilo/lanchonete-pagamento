@@ -3,6 +3,7 @@
         com.brunobonacci/mulog {:mvn/version "0.9.0"}
         com.novemberain/monger {:mvn/version "3.5.0"}
         integrant/integrant {:mvn/version "0.8.1"}
+        io.nats/jnats {:mvn/version "2.17.6"}
         integrant/repl {:mvn/version "0.3.3"}
         metosin/malli {:mvn/version "0.16.1"}
         io.pedestal/pedestal.immutant {:mvn/version "0.6.3"}

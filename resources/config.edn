@@ -13,6 +13,13 @@
  {:repository-name :pagamento
   :connection #ig/ref :mba-fiap.datasource.mongo/db}
 
+ :mba-fiap.adapter.nats/nats
+ {:url #or [#env NATS_URL "nats://66.51.121.86:4222"]
+  :app-name "pagamento"
+  :subjects-handlers {#env NATS_NEW_ORDERS #ig/ref :handler/novos-pedidos}}
+
+ [:mba-fiap.usecase.processar-pagamento/novos-pedidos :handler/novos-pedidos]
+ {}
 
  :mba-fiap.adapter.http.server/server
  {:env #profile {:default :dev

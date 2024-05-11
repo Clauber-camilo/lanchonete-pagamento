@@ -6,6 +6,7 @@
     (mba_fiap.repository.repository
       Repository)))
 
+
 (defn criar-pagamento
   [^Repository repository pagamento]
   (let [pagamento (.criar repository pagamento)]
@@ -30,3 +31,8 @@
     (if (empty? pagamento)
       {:error "Pagamento não encontrado"}
       pagamento)))
+
+
+(defn nats-receiver
+  [x]
+  (prn (.getSubject x) " " (String. (.getData x)) "----" (bean x)))
