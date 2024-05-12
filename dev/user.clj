@@ -1,6 +1,5 @@
 (ns user
   (:require
-    [clojure.data.json :as json]
     [hato.client :as hc]
     [integrant.core :as ig]
     [integrant.repl :as r]
@@ -26,8 +25,6 @@
            (add-tap api/submit)
            (api/open))))
 
-
-;; integrant.repl.state/system
 
 (defn repository
   [repository-key]

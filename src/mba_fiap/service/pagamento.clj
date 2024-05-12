@@ -31,8 +31,3 @@
     (if (empty? pagamento)
       {:error "Pagamento não encontrado"}
       pagamento)))
-
-
-(defn nats-receiver
-  [x]
-  (prn (.getSubject x) " " (String. (.getData x)) "----" (bean x)))

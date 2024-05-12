@@ -52,7 +52,7 @@
         ->dispatcher (fn [f]
                        (reify MessageHandler
                          (^void onMessage [_ ^Message msg]
-                           (f msg))))
+                           (f (String. (.getData msg))))))
         dispatchers (->> subjects-handlers
                          (mapv (fn [[subject handler]]
                                  (doto (.createDispatcher connection (->dispatcher handler))
@@ -68,26 +68,38 @@
 
 (defmethod ig/init-key ::nats
   [_ cfg]
-  (prn (str "Config ::" cfg))
-  (nats-client cfg #_(assoc cfg :subjects-handlers {"lanchonete.novos-pedidos" #(prn (.getSubject %) " " (String. (.getData %)) "----" (bean %))})))
+  (prn (str "Config :: " cfg))
+  (nats-client cfg))
 
 
 (defmethod ig/halt-key! ::nats [_ nats]
   (.close nats))
 
 
-(comment
-  (bean (.getStatistics (:connection c)))
+(defmethod ig/resolve-key ::nats
+  [_ nats]
+  nats)
 
-  (def c (nats-client {:url               "nats://66.51.121.86:4222"
-                              :app-name          "fodase"
-                              :subjects-handlers {"lanchonete.novos-pedidos" #(prn (.getSubject %) " " (String. (.getData %)) "----" (bean %))}}))
+
+(comment
 
   (with-open [c (nats-client {:url               "nats://66.51.121.86:4222"
-                              :app-name          "fodase"
-                              :subjects-handlers {"lanchonete.*" #(prn (.getSubject %) " " (String. (.getData %)) "----" (bean %))}})]
+                              :app-name          "lanchonete"
+                              ; :subjects-handlers {"lanchonete.*" #(prn (.getSubject %) " " (String. (.getData %)) "----" (bean %) "\n" (str %))}})]
+                              :subjects-handlers {
+                                                  ; "lanchonete.novo-pedido" 
+                                                  ; #(prn (String. (.getData %)))
+                                                  }})]
 
-    (doseq [r (range 0)]
+    (doseq [_ (range 1)]
       (Thread/sleep 500)
-      #_(publish c r "YAMETE KUDASAI")))
+      (publish c "novo-pedido" 
+               (str {
+                    :id #uuid "2985094e-43ea-4105-8e4e-239913f72d33" 
+                    :id-cliente #uuid "01c1e2be-3ce6-4ff6-9a88-6c75124840b0"
+                    :numero-do-pedido "fbb98663-77ab-4560-a065-6b9b833c190f"
+                    :produtos nil
+                    :status "recebido"
+                    :total 1238
+                    :created-at nil}))))
   )
