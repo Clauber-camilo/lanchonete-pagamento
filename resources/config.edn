@@ -19,7 +19,10 @@
   :subjects-handlers {"lanchonete.novo-pedido" #ig/ref :handler/novos-pedidos}}
 
  [:mba-fiap.usecase.processar-pagamento/novos-pedidos :handler/novos-pedidos]
- {:context {:test "sucess"}}
+ {:repository/pagamento #ig/ref :repository/pagamento}
+
+ [:mba-fiap.usecase.pagamento-efetuado/publicar-mensagem :publisher/publicar-mensagem]
+ {:nats #ig/ref :nats/nats}
 
  ;; [:mba-fiap.events.publisher/publisher :publisher/pagamento-efetuado]
  ;; {:publisher-name :pagamento-efetuado}

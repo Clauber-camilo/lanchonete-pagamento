@@ -58,7 +58,6 @@
                                  (doto (.createDispatcher connection (->dispatcher handler))
                                    (.subscribe subject)))))]
     (loop [status (.getStatus connection)]
-      (prn "NATS connection status: " status)
       (if (= status Connection$Status/CONNECTED)
         connection
         (recur (.getStatus connection))))
@@ -68,7 +67,6 @@
 
 (defmethod ig/init-key ::nats
   [_ cfg]
-  (prn (str "Config :: " cfg))
   (nats-client cfg))
 
 

@@ -1,19 +1,17 @@
 (ns mba-fiap.usecase.pagamento-efetuado
   (:require
-    [mba-fiap.events.publisher :as publisher])
-  (:import
-    (mba_fiap.adapter.nats
-      INATSClient)))
+    [integrant.core :as ig]))
 
 
 (defn publicar-mensagem
-  [^INATSClient nats]
-  (tap> nats)
-  (doseq [r (range 10)]
+  [ctx nats]
+  (tap> {:from "publicar-mensagem"
+         :ctx ctx
+         :nats nats})
+  (doseq [_ (range 10)]
     (Thread/sleep 500)
-    (.publish nats r "YAMETE KUDASAI")))
+    (.publish nats "testing" "YAMETE KUDASAI")))
 
 
-(defmethod publisher/make-publisher :pagamento-efetuado
-  [{:keys [nats]}]
-  (publicar-mensagem nats))
+(defmethod ig/init-key ::publicar-mensagem [_ spec]
+  (partial publicar-mensagem spec))
