@@ -1,19 +1,23 @@
 (ns mba-fiap.usecase.processar-pagamento
   (:require
     [clojure.edn :as edn]
-    [integrant.core :as ig]))
+    [integrant.core :as ig]
+    [mba-fiap.adapter.nats :refer [publish]]))
 
 
 (defn processar-novos-pedidos
-  [ctx event]
+  [ctx conn event]
   (tap> {:from "processar-novos-pedidos"
          :event event
+         :conn conn
          :ctx ctx})
-  (tap>  (edn/read-string event)))
+  (tap>  (edn/read-string event))
+  (tap> {:publish (.publish conn "testing" (str {:test "sucess"}))}))
 
 
 (comment 
    (processar-novos-pedidos 
+     nil
      nil
      (str { :id #uuid "2985094e-43ea-4105-8e4e-239913f72d33" 
             :id-cliente #uuid "01c1e2be-3ce6-4ff6-9a88-6c75124840b0"

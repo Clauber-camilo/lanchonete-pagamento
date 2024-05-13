@@ -1,0 +1,14 @@
+(ns mba-fiap.usecase.testing
+  (:require
+    [integrant.core :as ig]))
+
+
+(defn testing
+  [_ event]
+  (tap> {:from "testing"
+         :event event
+         :sucess true}))
+
+
+(defmethod ig/init-key ::test [_ _]
+  testing)

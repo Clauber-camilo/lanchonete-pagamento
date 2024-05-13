@@ -34,6 +34,7 @@
 
   (publish
     [_ subject msg]
+    (tap> "FOOOOOOI")
     (let [subject (str app-name "." subject)
           reply-to (str subject ".reply")]
 
@@ -52,7 +53,7 @@
         ->dispatcher (fn [f]
                        (reify MessageHandler
                          (^void onMessage [_ ^Message msg]
-                           (f (String. (.getData msg))))))
+                           (f (->NATSClient app-name connection nil) (String. (.getData msg))))))
         dispatchers (->> subjects-handlers
                          (mapv (fn [[subject handler]]
                                  (doto (.createDispatcher connection (->dispatcher handler))

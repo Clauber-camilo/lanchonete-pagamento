@@ -16,10 +16,14 @@
  [:mba-fiap.adapter.nats/nats :nats/nats]
  {:url #or [#env NATS_URL "nats://66.51.121.86:4222"]
   :app-name "pagamento"
-  :subjects-handlers {"lanchonete.novo-pedido" #ig/ref :handler/novos-pedidos}}
+  :subjects-handlers {"lanchonete.novo-pedido" #ig/ref :handler/novos-pedidos
+                      "pagamento.testing" #ig/ref :handler/testing}}
 
  [:mba-fiap.usecase.processar-pagamento/novos-pedidos :handler/novos-pedidos]
  {:repository/pagamento #ig/ref :repository/pagamento}
+
+ [:mba-fiap.usecase.testing/test :handler/testing]
+ {}
 
  [:mba-fiap.usecase.pagamento-efetuado/publicar-mensagem :publisher/publicar-mensagem]
  {:nats #ig/ref :nats/nats}
