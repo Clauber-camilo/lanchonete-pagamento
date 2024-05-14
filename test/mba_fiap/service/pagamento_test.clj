@@ -7,8 +7,10 @@
     [mba-fiap.repository.repository]
     [mba-fiap.service.pagamento :as pagamento.service])
   (:import
-    (java.util Date)
-    (mba_fiap.repository.repository Repository)))
+    (java.util
+      Date)
+    (mba_fiap.repository.repository
+      Repository)))
 
 
 (defn mock-repository

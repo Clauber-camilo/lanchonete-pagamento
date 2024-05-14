@@ -34,7 +34,6 @@
 
   (publish
     [_ subject msg]
-    (tap> "FOOOOOOI")
     (let [subject (str app-name "." subject)
           reply-to (str subject ".reply")]
 

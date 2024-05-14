@@ -6,8 +6,7 @@
 (defn testing
   [_ event]
   (tap> {:from "testing"
-         :event event
-         :sucess true}))
+         :event event}))
 
 
 (defmethod ig/init-key ::test [_ _]

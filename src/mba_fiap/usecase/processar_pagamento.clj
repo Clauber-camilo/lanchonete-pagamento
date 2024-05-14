@@ -2,17 +2,38 @@
   (:require
     [clojure.edn :as edn]
     [integrant.core :as ig]
-    [mba-fiap.adapter.nats :refer [publish]]))
+    [mba-fiap.base.validation :as validation]
+    [mba-fiap.events.publisher :as publisher]
+    [mba-fiap.model.pedido :refer [Pedido]]
+    [mba-fiap.service.pagamento :refer [criar-pagamento]]))
+
+
+(defn pedido->pagamento
+  [pedido]
+  {:id-pedido (:id pedido)
+   :total (:total pedido)
+   :status "em processamento"})
 
 
 (defn processar-novos-pedidos
-  [ctx conn event]
-  (tap> {:from "processar-novos-pedidos"
-         :event event
-         :conn conn
-         :ctx ctx})
-  (tap>  (edn/read-string event))
-  (tap> {:publish (.publish conn "testing" (str {:test "sucess"}))}))
+  [ctx nats event]
+
+  {:pre [(validation/schema-check Pedido (edn/read-string event))]}
+
+  (let [repository (get-in ctx [:repository/pagamento])
+        pedido (edn/read-string event)
+        create-payment (criar-pagamento repository (pedido->pagamento pedido))]
+
+    (if (empty? create-payment)
+      {:error "Erro ao criar pagamento"}
+
+      (publisher/publish-message nats {:topic (get-in ctx [:topic])
+                                       :msg create-payment}))))
+
+
+(defn processar-atualizar-pedido
+  [nats event]
+  {:sucess true})
 
 
 (comment 
