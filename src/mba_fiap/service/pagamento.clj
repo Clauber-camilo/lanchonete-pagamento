@@ -4,23 +4,27 @@
     [mba-fiap.model.pagamento :as pagamento])
   (:import
     (mba_fiap.repository.repository
-      Repository)))
+      Repository)
+    (org.bson.types
+      ObjectId)))
 
 
 (defn criar-pagamento
   [^Repository repository pagamento]
   (let [pagamento (.criar repository pagamento)]
-    pagamento))
+    (assoc pagamento :_id (str (:_id pagamento)))))
 
 
 (defn atualizar-status-pagamento
   [^Repository repository id-pagamento status]
   {:pre [(instance? Repository repository)
-         (uuid? id-pagamento)
+         (string? id-pagamento)
          (validation/schema-check pagamento/Status status)]}
-  (let [pagamento (.buscar repository id-pagamento)
+  (let [pagamento (.buscar repository (ObjectId. id-pagamento))
         pagamento (assoc pagamento :status status)
         pagamento (.atualizar repository pagamento)]
+    (tap> {:from "atualizar-status-pagamento"
+           :pagamento pagamento})
     pagamento))
 
 

@@ -21,7 +21,8 @@
 
  [:mba-fiap.usecase.processar-pagamento/novos-pedidos :handler/novos-pedidos]
  {:repository/pagamento #ig/ref :repository/pagamento
-  :topic "novo-pagamento"}
+  :topic-new-payment "novo-pagamento"
+  :topic-update-status "status-atualizado"}
 
  [:mba-fiap.usecase.testing/test :handler/testing]
  {}

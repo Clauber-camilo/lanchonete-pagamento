@@ -23,8 +23,8 @@
 
 
   (buscar
-    [_ id]
-    (let [pagamento (mc/find-one-as-map db "pagamento" {:id-pedido id})]
+    [_ oid]
+    (let [pagamento (mc/find-map-by-id db "pagamento" oid)]
       pagamento))
 
 
@@ -37,27 +37,16 @@
 
   (atualizar
     [_ data]
-    (let [{:keys [id-pedido]} data
-          pagamento (mc/find-one-as-map db "pagamento" {:id-pedido id-pedido})
-          _ (tap> pagamento)]
-      (if (nil? pagamento)
-        (u/log ::pagamento_datasource, :msg "Pagamento não encontrado")
-        (let [id (:_id pagamento)
-              result (mc/update-by-id db "pagamento" id
-                                      {:id-pedido (:id-pedido pagamento)
-                                       :status (:status data)})]
-          result))))
+    (let [id (:_id data)
+          result (mc/update-by-id db "pagamento" id
+                                  {:id-pedido (:id-pedido data)
+                                   :status (:status data)})]
+      result))
 
 
   (remover
     [_ id]
-    (let [pagamento (mc/find-one-as-map db "pagamento" {:id-pedido id})
-          _ (tap> pagamento)]
-      (if (nil? pagamento)
-        (u/log ::pagamento_datasource, :msg "Pagamento não encontrado")
-        (let [id (:_id pagamento)
-              _ (mc/remove-by-id db "pagamento" id)]
-          true)))))
+    (mc/remove-by-id db "pagamento" id)))
 
 
 (defmethod repository/make-repository :pagamento

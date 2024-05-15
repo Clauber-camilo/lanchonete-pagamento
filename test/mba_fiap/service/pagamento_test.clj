@@ -10,7 +10,8 @@
     (java.util
       Date)
     (mba_fiap.repository.repository
-      Repository)))
+      Repository)
+    org.bson.types.ObjectId))
 
 
 (defn mock-repository
@@ -18,16 +19,16 @@
   (proxy [Repository] []
     (criar
       [data]
-      (let [pgmt-uuid (random-uuid)
+      (let [pgmt-oid (ObjectId.)
             created (:created-at data (Date.))
-            data (assoc data :id pgmt-uuid :created-at created)]
+            data (assoc data :id pgmt-oid :created-at created)]
 
-        (swap! store assoc pgmt-uuid data)
+        (swap! store assoc pgmt-oid data)
         (swap! store update (:id-pedido data) (fn [x]
                                                 (if (seq x)
                                                   (conj x data)
                                                   [data])))
-        {:id         pgmt-uuid
+        {:_id         pgmt-oid
          :id-pedido  (:id-pedido data)
          :total      (:total data)
          :status     (:status data)
@@ -42,7 +43,7 @@
       (let [data (get @store q)]
         (->> data
              (mapv (fn [x]
-                     {:id         (:id x)
+                     {:_id         (:id x)
                       :id-pedido  (:id-pedido x)
                       :total      (:total x)
                       :status     (:status x)
@@ -50,10 +51,10 @@
 
     (atualizar
       [data]
-      (let [found (get @store (:id data))
+      (let [found (get @store (:_id data))
             updated-data (assoc found :status (:status data))]
         (swap! store assoc (:id updated-data) updated-data)
-        {:id         (:id updated-data)
+        {:_id         (:_id updated-data)
          :id-pedido  (:id-pedido updated-data)
          :total      (:total updated-data)
          :status     (:status updated-data)
@@ -65,8 +66,11 @@
     [pagamento (mg/generator pagamento/Pagamento)]
     (let [store (atom {})
           mr (mock-repository store)
-          result (pagamento.service/criar-pagamento mr pagamento)]
-      (= (:id-pedido pagamento) (:id-pedido result)))))
+          result (pagamento.service/criar-pagamento mr pagamento)
+          _ (tap> [:result result])]
+      (and
+        (not (nil? (:_id result)))
+        (= (:id-pedido pagamento) (:id-pedido result))))))
 
 
 (defspec buscar-por-id-pedido-test 1000
@@ -94,8 +98,9 @@
     [pagamento (mg/generator pagamento/Pagamento)]
     (let [store (atom {})
           mr (mock-repository store)
-          {:keys [id]} (.criar mr pagamento)
-          found (pagamento.service/atualizar-status-pagamento mr id "pago")]
+          {:keys [_id]} (pagamento.service/criar-pagamento mr pagamento)
+          _ (tap> {:id _id})
+          found (pagamento.service/atualizar-status-pagamento mr _id "pago")]
       (tap> [pagamento found])
       (= "pago" (:status found)))))
 
