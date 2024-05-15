@@ -5,7 +5,8 @@
     [mba-fiap.base.validation :as validation]
     [mba-fiap.events.publisher :as publisher]
     [mba-fiap.model.pedido :refer [Pedido]]
-    [mba-fiap.service.pagamento :refer [criar-pagamento]]))
+    [mba-fiap.service.pagamento :refer [criar-pagamento]]
+    [mba-fiap.usecase.processar-atualizar-status :refer [processar-atualizar-status-pagamento]]))
 
 
 (defn pedido->pagamento
@@ -27,26 +28,12 @@
     (if (empty? create-payment)
       {:error "Erro ao criar pagamento"}
 
-      (publisher/publish-message nats {:topic (get-in ctx [:topic])
-                                       :msg create-payment}))))
+      (do (publisher/publish-message nats {:topic (get-in ctx [:topic-new-payment])
+                                           :msg create-payment})
 
-
-(defn processar-atualizar-pedido
-  [nats event]
-  {:sucess true})
-
-
-(comment 
-   (processar-novos-pedidos 
-     nil
-     nil
-     (str { :id #uuid "2985094e-43ea-4105-8e4e-239913f72d33" 
-            :id-cliente #uuid "01c1e2be-3ce6-4ff6-9a88-6c75124840b0"
-            :numero-do-pedido "fbb98663-77ab-4560-a065-6b9b833c190f"
-            :produtos nil
-            :status "recebido"
-            :total 1238
-            :created-at nil}) ))
+          (Thread/sleep 500)
+          (processar-atualizar-status-pagamento ctx nats (str {:_id (:_id create-payment)
+                                                               :status "pago"}))))))
 
 
 (defmethod ig/init-key ::novos-pedidos [_ spec]

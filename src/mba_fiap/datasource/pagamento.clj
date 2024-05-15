@@ -38,10 +38,8 @@
   (atualizar
     [_ data]
     (let [id (:_id data)
-          result (mc/update-by-id db "pagamento" id
-                                  {:id-pedido (:id-pedido data)
-                                   :status (:status data)})]
-      result))
+          _ (mc/update-by-id db "pagamento" id data)]
+      (mc/find-map-by-id db "pagamento" id)))
 
 
   (remover

@@ -17,7 +17,7 @@
  {:url #or [#env NATS_URL "nats://66.51.121.86:4222"]
   :app-name "pagamento"
   :subjects-handlers {"lanchonete.novo-pedido" #ig/ref :handler/novos-pedidos
-                      "pagamento.novo-pagamento" #ig/ref :handler/testing}}
+                      "pagamento.*" #ig/ref :handler/testing}}
 
  [:mba-fiap.usecase.processar-pagamento/novos-pedidos :handler/novos-pedidos]
  {:repository/pagamento #ig/ref :repository/pagamento

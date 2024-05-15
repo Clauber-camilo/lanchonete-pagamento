@@ -23,9 +23,7 @@
   (let [pagamento (.buscar repository (ObjectId. id-pagamento))
         pagamento (assoc pagamento :status status)
         pagamento (.atualizar repository pagamento)]
-    (tap> {:from "atualizar-status-pagamento"
-           :pagamento pagamento})
-    pagamento))
+    (assoc pagamento :_id (str (:_id pagamento)))))
 
 
 (defn buscar-por-id-pedido

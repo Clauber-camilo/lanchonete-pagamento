@@ -66,8 +66,7 @@
     [pagamento (mg/generator pagamento/Pagamento)]
     (let [store (atom {})
           mr (mock-repository store)
-          result (pagamento.service/criar-pagamento mr pagamento)
-          _ (tap> [:result result])]
+          result (pagamento.service/criar-pagamento mr pagamento)]
       (and
         (not (nil? (:_id result)))
         (= (:id-pedido pagamento) (:id-pedido result))))))

@@ -5,7 +5,10 @@
     [integrant.repl :as r]
     [integrant.repl.state]
     [mba-fiap.adapter.nats :refer [nats-client]]
-    [mba-fiap.pagamento :as pagamento]))
+    [mba-fiap.pagamento :as pagamento])
+  (:import
+    (org.bson.types
+      ObjectId)))
 
 
 (integrant.repl/set-prep! #(pagamento/prep-config :dev))
@@ -42,10 +45,12 @@
                  {:id-pedido #uuid"fbb98663-77ab-4560-a065-6b9b833c190f"
                   :status "em processamento"})
    (.atualizar (repository :repository/pagamento)
-                   {:id-pedido #uuid"fbb98663-77ab-4560-a065-6b9b833c190f"
+                   {:_id (ObjectId. "6644048c7405ae6c8eb88a4a")
+                    :total 234
+                    :id-pedido #uuid"fbb98663-77ab-4560-a065-6b9b833c190f"
                     :status "pago"})
    (.buscar (repository :repository/pagamento)
-                   #uuid"fbb98663-77ab-4560-a065-6b9b833c190f")
+                   (ObjectId. "6643f32a7405aed48ae9cbca"))
    (.remover (repository :repository/pagamento)
                   "1234"))
 
@@ -75,29 +80,3 @@
                     :total 1238
                     }))))
   )
-
-
-;; (def pagamento-payload
-;;   {:id-pedido "fbb98663-77ab-4560-a065-6b9b833c190f"
-;;    :status "em processamento"})
-;;
-;;
-;; (defn buscar-pagamento
-;;   [id]
-;;   (hc/get (str "http://localhost:8000/pagamento/" id)))
-;;
-;;
-;; (defn criar-pagamento
-;;   [pagamento]
-;;   (hc/post "http://localhost:8000/pagamento" {:body (json/write-str pagamento)}))
-;;
-;;
-;; (defn atualizar-pagamento
-;;   [id status]
-;;   (hc/put (str "http://localhost:8000/pagamento/" id) {:status status}))
-;;
-;;
-;; (comment
-;;          (criar-pagamento pagamento-payload)
-;;          (buscar-pagamento (:id-pedido pagamento-payload))
-;;          (atualizar-pagamento (:id-pedido pagamento-payload) "pago"))
