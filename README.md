@@ -22,7 +22,19 @@ To get started with the Microservice Payment, you'll need the Clojure CLI instal
 To run in dev mode, you will need the clojure cli
 in your environment this could be access [here](https://clojure.org/guides/install_clojure).
 
-After the cli installed in your system you can run:
+After the cli installed in your system, we need to replicate the environment variables in `.env` file. To do that, you can copy the `.env.example` file and rename it to `.env`.
+
+```bash
+cp .env.example .env
+```
+
+Also, in the terminal that you will run the application we can set the environment variables with the following command:
+
+```bash
+set -a && source .env
+```
+
+Then, you can run the following command to start the application:
 
 ```bash
 clj -A:dev:test
@@ -31,3 +43,13 @@ clj -A:dev:test
 This will run the project with the dev and test profiles.
 
 In the repl, you can run `(go)` to start the application.
+
+### Test
+
+We can run the tests with the following command:
+
+```bash
+clj -X:test
+```
+
+This will run all the tests of the project and will export a coverage report.
