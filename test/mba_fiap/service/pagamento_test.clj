@@ -61,7 +61,7 @@
          :created-at (:created-at updated-data)}))))
 
 
-(defspec criar-pagamento-test 1
+(defspec criar-pagamento-test 100
   (prop/for-all
     [pagamento (mg/generator pagamento/Pagamento)]
     (let [store (atom {})
@@ -92,7 +92,7 @@
       (= "Pagamento não encontrado" (:error found)))))
 
 
-(defspec atualizar-status-pagamento 1
+(defspec atualizar-status-pagamento 100
   (prop/for-all
     [pagamento (mg/generator pagamento/Pagamento)]
     (let [store (atom {})
@@ -100,13 +100,10 @@
           {:keys [_id]} (pagamento.service/criar-pagamento mr pagamento)
           _ (tap> {:id _id})
           found (pagamento.service/atualizar-status-pagamento mr _id "pago")]
-      (tap> [pagamento found])
       (= "pago" (:status found)))))
 
 
 (comment
-  (.criar (mock-repository (atom {})) {:status "foi"})
-
   (criar-pagamento-test)
   (buscar-por-id-pedido-test)
   (buscar-por-id-pedido-test-error)

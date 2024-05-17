@@ -4,9 +4,6 @@
     [integrant.core :as ig]))
 
 
-#_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
-
-
 (defprotocol Repository
 
   (criar [this data])

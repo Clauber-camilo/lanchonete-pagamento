@@ -22,7 +22,7 @@
  [:mba-fiap.usecase.processar-pagamento/novos-pedidos :handler/novos-pedidos]
  {:repository/pagamento #ig/ref :repository/pagamento
   :topic-new-payment "novo-pagamento"
-  :topic-update-status "status-atualizado"}
+  :topic-update-status "status"}
 
  [:mba-fiap.usecase.testing/test :handler/testing]
  {}
@@ -37,5 +37,6 @@
                  :prod :prod}
   :port #long #profile {:default #or [#env HTTP_PORT 8000]}
   :join? #profile {:default true
+                   :test false
                    :dev false}
   :app-context {:repository/pagamento #ig/ref :repository/pagamento}}}

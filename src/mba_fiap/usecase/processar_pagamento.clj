@@ -16,24 +16,27 @@
    :status "em processamento"})
 
 
+(defn sleep
+  [ms]
+  (Thread/sleep ms))
+
+
 (defn processar-novos-pedidos
   [ctx nats event]
 
   {:pre [(validation/schema-check Pedido (edn/read-string event))]}
+  (try
+    (let [repository (get-in ctx [:repository/pagamento])
+          pedido (edn/read-string event)
+          create-payment (criar-pagamento repository (pedido->pagamento pedido))]
 
-  (let [repository (get-in ctx [:repository/pagamento])
-        pedido (edn/read-string event)
-        create-payment (criar-pagamento repository (pedido->pagamento pedido))]
-
-    (if (empty? create-payment)
-      {:error "Erro ao criar pagamento"}
-
-      (do (publisher/publish-message nats {:topic (get-in ctx [:topic-new-payment])
-                                           :msg create-payment})
-
-          (Thread/sleep 500)
-          (processar-atualizar-status-pagamento ctx nats (str {:_id (:_id create-payment)
-                                                               :status "pago"}))))))
+      (publisher/publish-message nats {:topic (get-in ctx [:topic-new-payment])
+                                       :msg create-payment})
+      (sleep 500)
+      (processar-atualizar-status-pagamento ctx nats (str {:_id (:_id create-payment)
+                                                           :status "pago"})))
+    (catch Exception e
+      {:error (str "Erro ao processar pedido: " e)})))
 
 
 (defmethod ig/init-key ::novos-pedidos [_ spec]

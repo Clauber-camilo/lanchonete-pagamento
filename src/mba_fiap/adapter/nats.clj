@@ -1,4 +1,5 @@
 (ns mba-fiap.adapter.nats
+  (:gen-class)
   (:require
     [integrant.core :as ig])
   (:import
