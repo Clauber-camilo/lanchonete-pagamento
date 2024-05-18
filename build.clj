@@ -26,7 +26,12 @@
                    {:basis basis
                     :java-opts (:jvm-opts combined)
                     :main      'clojure.main
-                    :main-args ["-m" "cloverage.coverage" "--test-ns-path" "test" "--src-ns-path" "src"]})
+                    :main-args ["-m"
+                                "cloverage.coverage"
+                                "--junit"
+                                "--no-html"
+                                "--test-ns-path" "test"
+                                "--src-ns-path" "src"]})
         {:keys [exit]} (b/process cmds)]
     (when-not (zero? exit) (throw (ex-info "Tests failed" {}))))
   opts)
