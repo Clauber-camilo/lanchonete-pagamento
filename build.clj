@@ -26,7 +26,7 @@
                    {:basis basis
                     :java-opts (:jvm-opts combined)
                     :main      'clojure.main
-                    :main-args ["-m" "cognitect.test-runner"]})
+                    :main-args ["-m" "cloverage.coverage" "--test-ns-path" "test" "--src-ns-path" "src"]})
         {:keys [exit]} (b/process cmds)]
     (when-not (zero? exit) (throw (ex-info "Tests failed" {}))))
   opts)
@@ -46,8 +46,8 @@
 (defn ci
   "Run the CI pipeline of tests (and build the uberjar)."
   [opts]
-  (test opts)
   (b/delete {:path "target"})
+  (test opts)
   (let [opts (uber-opts opts)]
     (println "\nCopying source...")
     (b/copy-dir {:src-dirs ["resources" "src"] :target-dir class-dir})
@@ -55,4 +55,5 @@
     (b/compile-clj opts)
     (println "\nBuilding JAR...")
     (b/uber opts))
+
   opts)
