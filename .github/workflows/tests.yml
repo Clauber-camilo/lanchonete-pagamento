@@ -15,6 +15,7 @@ jobs:
 
     runs-on: ${{ matrix.os }}
     env:
+      NATS_URL: ${{ vars.NATS_URL }}
       NATS_NEW_ORDERS: ${{ vars.NATS_NEW_ORDERS }}
       NATS_APP_NAME: ${{ vars.NATS_APP_NAME }}
       NATS_PUBLISH_NEW_PAYMENT: ${{ vars.NATS_PUSLISH_NEW_PAYMENT }}
