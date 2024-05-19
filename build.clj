@@ -30,6 +30,7 @@
                                 "cloverage.coverage"
                                 "--codecov"
                                 "--junit"
+                                "--lcov"
                                 "--no-html"
                                 "--test-ns-path" "test"
                                 "--src-ns-path" "src"]})

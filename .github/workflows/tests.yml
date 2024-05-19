@@ -55,6 +55,9 @@ jobs:
       # - name: Execute tests
       #   run: clojure -X:test
 
+      - name: Coveralls
+        uses: coverallsapp/github-action@v2
+
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
