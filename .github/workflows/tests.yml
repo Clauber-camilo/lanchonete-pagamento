@@ -47,14 +47,8 @@ jobs:
       - name: Execute build and run tests
         run: clojure -T:build ci
 
-      - name: list project
-        run: ls -la
-
-      # - name: Execute BDD (cucumber)
-      #   run: clojure -M:test:cucumber -g ./test/mba_fiap/ ./test/resources/
-
-      # - name: Execute tests
-      #   run: clojure -X:test
+      - name: Execute BDD (cucumber)
+        run: clojure -M:test:cucumber -g ./test/mba_fiap/ ./test/resources/
 
       - name: Coveralls
         uses: coverallsapp/github-action@v2
