@@ -1,59 +1,46 @@
 (ns mba-fiap.pagamento-test
   (:require
     [aero.core :as aero]
-    [clj-test-containers.core :as tc]
     [clojure.test :refer [deftest is testing use-fixtures]]
     [hato.client :as hc]
     [integrant.core :as ig]
-    [mba-fiap.pagamento :as pagamento]))
-
-
-(defonce db-state (atom ::not-initialized))
+    [mba-fiap.pagamento :as pagamento]
+    [mba-fiap.system :as system]))
 
 
 (defn mongo-fixture
   [f]
-  (let [mongo-container
-        (-> (tc/create {:image-name    "mongo:8.0.0-rc4"
-                        :exposed-ports [27017]
-                        :env-vars      {"MONGO_INITDB_ROOT_USERNAME" "root"
-                                        "MONGO_INITDB_ROOT_PASSWORD" "example"}})
-            (tc/start!))]
-    (reset! db-state mongo-container)
-    (tap> {:from "mongo-container"
+  (let [_ (system/start-mongo-container)]
 
-           :mongo mongo-container})
     (try
       (f)
       (catch Exception e
-        (prn e)))
-    (tc/stop! mongo-container)
-    (reset! db-state ::not-initialized)))
+        (prn e))
+      (finally (system/stop-mongo-container)))))
 
 
-(defonce system-state (atom ::not-initialized))
+(defn nats-fixture
+  [f]
+  (let [_ (system/start-nats-container)]
+
+    (try
+      (f)
+      (catch Exception e
+        (prn e))
+      (finally (system/stop-nats-container)))))
 
 
 (defn system-fixture
   [f]
-  (let [conf (pagamento/prep-config :test)
-        conf (-> conf
-                 (assoc-in [:mba-fiap.datasource.mongo/db :spec :uri]
-                           (format "mongodb://root:example@%s:%s/admin"
-                                   (:host @db-state)
-                                   (get (:mapped-ports @db-state) 27017))))
-        _ (tap> conf)
-        system (ig/init conf)]
-    (reset! system-state system)
+  (let [_system (system/system-start)]
     (try
       (f)
       (catch Exception e
-        (prn e)))
-    (ig/halt! system)
-    (reset! system-state ::not-initialized)))
+        (prn e))
+      (finally (system/system-stop)))))
 
 
-(use-fixtures :once mongo-fixture system-fixture)
+(use-fixtures :once nats-fixture mongo-fixture system-fixture)
 
 
 (deftest test-main-startup
