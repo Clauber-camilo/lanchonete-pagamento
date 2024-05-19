@@ -16,16 +16,12 @@
  [:mba-fiap.adapter.nats/nats :nats/nats]
  {:url #env NATS_URL
   :app-name #or [#env NATS_APP_NAME "pagamento"]
-  :subjects-handlers {#env NATS_NEW_ORDERS #ig/ref :handler/novos-pedidos
-                      "pagamento.*" #ig/ref :handler/testing}}
+  :subjects-handlers {#env NATS_NEW_ORDERS #ig/ref :handler/novos-pedidos}}
 
  [:mba-fiap.usecase.processar-pagamento/novos-pedidos :handler/novos-pedidos]
  {:repository/pagamento #ig/ref :repository/pagamento
   :topic-new-payment #or [#env NATS_PUBLISH_NEW_PAYMENT "novo-pagamento"]
   :topic-update-status #or [#env NATS_PUBLISH_STATUS "status"]}
-
- [:mba-fiap.usecase.testing/test :handler/testing]
- {}
 
  ;; [:mba-fiap.usecase.pagamento-efetuado/publicar-mensagem :publisher/publicar-mensagem]
  ;; {:nats #ig/ref :nats/nats}
