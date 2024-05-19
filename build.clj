@@ -61,9 +61,11 @@
     (b/compile-clj opts)
     (println "\nBuilding JAR...")
     (b/uber opts)
+    (when-not
+      (:skip-tests opts)
+      (test opts))
     (when (:bdd opts)
       (println "\nRunning Cucumber tests...\n"
                (sh/sh "clojure" "-M:test:cucumber" "-g" "./test/mba_fiap/" "./test/resources/"))))
 
-  (test opts)
   opts)

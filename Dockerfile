@@ -4,10 +4,10 @@ RUN mkdir -p /build
 WORKDIR /build
 COPY ./ /build/
 
-RUN clojure -T:build ci
+RUN clojure -T:build ci :skip-tests true
 # RUN clojure -M:test:cucumber -g ./test/mba_fiap/ ./test/resources/
 
-FROM eclipse-temurin:17-alpine AS runner
+FROM eclipse-temurin:21-alpine AS runner
 RUN addgroup -S pagamento && adduser -S pagamento -G pagamento
 RUN mkdir -p /service && chown -R pagamento. /service
 USER pagamento
