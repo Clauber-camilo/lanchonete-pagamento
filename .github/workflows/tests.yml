@@ -15,11 +15,11 @@ jobs:
 
     runs-on: ${{ matrix.os }}
     env:
-      NATS_NEW_ORDERS: ${{vars.NATS_NEW_ORDERS}}
-      NATS_URL: ${{vars.NATS_URL}}
-      NATS_APP_NAME: ${{vars.NATS_APP_NAME}}
-      NATS_PUSLISH_NEW_PAYMENT: ${{vars.NATS_PUSLISH_NEW_PAYMENT}}
-      NATS_PUBLISH_STATUS: ${{vars.NATS_PUBLISH_STATUS}}
+      NATS_NEW_ORDERS: ${{ vars.NATS_NEW_ORDERS }}
+      NATS_URL: ${{ secrets.NATS_URL }}
+      NATS_APP_NAME: ${{ vars.NATS_APP_NAME }}
+      NATS_PUBLISH_NEW_PAYMENT: ${{ vars.NATS_PUSLISH_NEW_PAYMENT }}
+      NATS_PUBLISH_STATUS: ${{ vars.NATS_PUBLISH_STATUS }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
