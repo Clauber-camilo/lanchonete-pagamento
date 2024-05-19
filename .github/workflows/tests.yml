@@ -58,12 +58,6 @@ jobs:
       - name: Coveralls
         uses: coverallsapp/github-action@v2
 
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
       # (Optionally) When you don't need Testcontainers anymore, you could terminate sessions eagerly
       - name: Terminate Testcontainers Cloud Client active sessions
         uses: atomicjar/testcontainers-cloud-setup-action@v1
