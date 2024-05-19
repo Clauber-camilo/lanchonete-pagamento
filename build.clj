@@ -29,6 +29,7 @@
                     :main-args ["-m"
                                 "cloverage.coverage"
                                 "--codecov"
+                                "--junit"
                                 "--no-html"
                                 "--test-ns-path" "test"
                                 "--src-ns-path" "src"]})
