@@ -46,11 +46,20 @@ jobs:
       - name: Execute build
         run: clojure -T:build ci
 
+      - name: list project
+        run: ls -la
+
       # - name: Execute BDD (cucumber)
       #   run: clojure -M:test:cucumber -g ./test/mba_fiap/ ./test/resources/
 
       # - name: Execute tests
       #   run: clojure -X:test
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-report
+          path: target/coverage/codecov.json
 
       # (Optionally) When you don't need Testcontainers anymore, you could terminate sessions eagerly
       - name: Terminate Testcontainers Cloud Client active sessions
@@ -63,6 +72,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: [clojure]
     steps:
+      - name: Download coverage report
+        uses: actions/download-artifact@v2
+        with:
+          name: coverage-report
+
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis

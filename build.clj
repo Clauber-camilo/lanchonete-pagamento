@@ -28,10 +28,11 @@
                     :main      'clojure.main
                     :main-args ["-m"
                                 "cloverage.coverage"
-                                "--junit"
+                                "--codecov"
                                 "--no-html"
                                 "--test-ns-path" "test"
-                                "--src-ns-path" "src"]})
+                                "--src-ns-path" "src"
+                                "--runner" "eftest"]})
         {:keys [exit]} (b/process cmds)]
     (when-not (zero? exit) (throw (ex-info "Tests failed" {}))))
   opts)
