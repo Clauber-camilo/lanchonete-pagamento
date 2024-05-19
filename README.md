@@ -68,3 +68,9 @@ clj -X:test
 ```
 
 This will run all the tests of the project and will export a coverage report.
+
+To run the cucumber tests, we can run the following command:
+
+```bash
+clj -M:test:cucumber -g ./test/mba_fiap/ ./test/resources/
+```
