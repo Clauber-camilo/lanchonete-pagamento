@@ -1,5 +1,7 @@
 # Microservice payment
 
+[![Coverage Status](https://coveralls.io/repos/github/Clauber-camilo/lanchonete-pagamento/badge.svg)](https://coveralls.io/github/Clauber-camilo/lanchonete-pagamento)
+
 <!--toc:start-->
 
 - [Microservice payment](#microservice-payment)

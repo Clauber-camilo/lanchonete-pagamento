@@ -9,6 +9,7 @@ on:
 
 jobs:
   clojure:
+    name: Build Clj and run tests
     strategy:
       matrix:
         os: [ubuntu-latest]
