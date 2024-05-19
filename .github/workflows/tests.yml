@@ -77,6 +77,9 @@ jobs:
         with:
           name: coverage-report
 
+      - name: list project
+        run: ls -la
+
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
