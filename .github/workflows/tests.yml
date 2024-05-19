@@ -43,7 +43,7 @@ jobs:
           token: ${{ secrets.TC_CLOUD_TOKEN }}
           wait: true
 
-      - name: Execute build
+      - name: Execute build and run tests
         run: clojure -T:build ci
 
       - name: list project

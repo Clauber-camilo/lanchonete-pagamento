@@ -50,10 +50,9 @@
 
 
 (defn ci
-  "Run the CI pipeline of tests (and build the uberjar)."
+  "Build the project for ci and run tests"
   [opts]
   (b/delete {:path "target"})
-  (test opts)
   (let [opts (uber-opts opts)]
     (println "\nCopying source...")
     (b/copy-dir {:src-dirs ["resources" "src"] :target-dir class-dir})
@@ -62,4 +61,5 @@
     (println "\nBuilding JAR...")
     (b/uber opts))
 
+  (test opts)
   opts)
