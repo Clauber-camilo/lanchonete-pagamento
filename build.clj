@@ -31,8 +31,7 @@
                                 "--codecov"
                                 "--no-html"
                                 "--test-ns-path" "test"
-                                "--src-ns-path" "src"
-                                "--runner" "eftest"]})
+                                "--src-ns-path" "src"]})
         {:keys [exit]} (b/process cmds)]
     (when-not (zero? exit) (throw (ex-info "Tests failed" {}))))
   opts)
