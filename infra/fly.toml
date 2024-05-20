@@ -1,0 +1,45 @@
+# fly.toml app configuration file generated for lanchonete-pagamento-mongo on 2024-05-20T15:35:50-03:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'lanchonete-pagamento-mongo'
+primary_region = 'gru'
+
+[build]
+
+[[mounts]]
+  source = 'mongo_data'
+  destination = '/data'
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[checks]
+  [checks.role]
+    port = 5500
+    type = 'http'
+    interval = '5s'
+    timeout = '10s'
+    grace_period = '30s'
+    method = 'get'
+    path = '/flycheck/role'
+
+  [checks.vm]
+    port = 5500
+    type = 'http'
+    interval = '15s'
+    timeout = '10s'
+    grace_period = '1s'
+    method = 'get'
+    path = '/flycheck/vm'
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1
