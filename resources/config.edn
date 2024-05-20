@@ -28,7 +28,7 @@
  {:env #profile {:default :dev
                  :test :test
                  :prod :prod}
-  :port #long #profile {:default #or [#env HTTP_PORT 8000]}
+  :port #long #profile {:default #or [#env HTTP_PORT 8080]}
   :join? #profile {:default true
                    :test false
                    :dev false}

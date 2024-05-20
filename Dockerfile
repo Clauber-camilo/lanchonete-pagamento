@@ -14,7 +14,7 @@ USER pagamento
 
 RUN mkdir -p /service
 WORKDIR /service
-ENV HTTP_PORT=8000
-EXPOSE 8000
+ENV HTTP_PORT=8080
+EXPOSE 8080
 COPY --from=builder /build/target/net.clojars.mba-fiap/lanchonete-pagamento-0.1.0-SNAPSHOT.jar /service/pagamento.jar
 ENTRYPOINT ["java", "-jar", "/service/pagamento.jar"]
