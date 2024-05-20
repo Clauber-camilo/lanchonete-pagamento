@@ -55,7 +55,7 @@
                   "1234"))
 
 
-(comment (hc/get "http://localhost:8000/healthcheck"))
+(comment (hc/get "http://localhost:8080/healthcheck"))
 
 
 (comment
