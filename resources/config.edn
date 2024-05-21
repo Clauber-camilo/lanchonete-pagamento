@@ -32,4 +32,8 @@
   :join? #profile {:default true
                    :test false
                    :dev false}
-  :app-context {:repository/pagamento #ig/ref :repository/pagamento}}}
+  :app-context {:nats/nats #ig/ref :nats/nats
+                :nats/config {:url #env NATS_URL
+                              :topic-listener #or [#env NATS_NEW_ORDERS "lanchonete.novo-pedido"]
+                              :app-name #or [#env NATS_APP_NAME "pagamento"]}
+                :repository/pagamento #ig/ref :repository/pagamento}}}

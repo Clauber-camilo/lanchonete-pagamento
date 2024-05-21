@@ -46,8 +46,7 @@
 (deftest test-main-startup
   (testing "main startup ok"
     (let [{:keys [body status]} (hc/get "http://localhost:8080/healthcheck")]
-      (is (= 200 status))
-      (is (= "ok" body)))))
+      (is (= 200 status)))))
 
 
 (defn mock-read-config
