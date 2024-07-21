@@ -20,10 +20,11 @@
 
 (defn healthcheck
   [request]
-  (let [db (get-in request [:app-context :repository/pagamento :db])
+  (let [ctx (get-in request [:app-context])
+        db (get-in request [:app-context :repository/pagamento :db])
         res (mongo/check-health db)]
     (if (= (:status res) "ok")
       {:status 200
-       :body "ok"}
+       :body (str ctx)}
       {:status 500
        :body "error"})))
