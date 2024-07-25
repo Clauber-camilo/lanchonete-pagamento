@@ -1,0 +1,52 @@
+# Docker Compose configuration file
+
+# Define the services that make up the app
+services:
+  # MongoDB service
+  mongodb:
+    image: mongo:8.0.0-rc4
+    container_name: mongodb_container
+    networks:
+      - lanchonete_lanchonete
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    volumes:
+      - mongodb_data_container:/data/db
+    ports:
+      - 27017:27017
+
+  # Lanchonete Pagamento service
+  lanchonete-pagamento:
+    build: .
+    container_name: lanchonete-pagamento
+    depends_on:
+      - mongodb
+    volumes:
+      - m2-repo:/usr/share/maven
+    ports:
+      - "8081:8081"
+    command: ["prod"]
+    networks:
+      - lanchonete_lanchonete
+    environment:
+      # NATS configuration
+      NATS_APP_NAME: pagamento
+      NATS_NEW_ORDERS: pagamento.novo-pedido
+      NATS_PUBLISH_STATUS: status
+      NATS_PUSLISH_NEW_PAYMENT: novo-pagamento
+      NATS_URL: nats://nats:4222
+
+      # MongoDB configuration
+      MONGO_URI: mongodb://root:example@mongodb:27017/admin
+      MONGO_DB: fiap-lanchonete-pagamento
+      MONGO_COLLECTION: pagamento
+
+# Define the volumes used by the services
+volumes:
+  m2-repo:
+  mongodb_data_container:
+
+networks:
+  lanchonete_lanchonete:
+    external: true

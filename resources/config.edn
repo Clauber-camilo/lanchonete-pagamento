@@ -16,7 +16,7 @@
  [:mba-fiap.adapter.nats/nats :nats/nats]
  {:url #env NATS_URL
   :app-name #or [#env NATS_APP_NAME "pagamento"]
-  :subjects-handlers {#or [#env NATS_NEW_ORDERS "lanchonete.novo-pedido"] #ig/ref :handler/novos-pedidos}}
+  :subjects-handlers {#or [#env NATS_NEW_ORDERS "pagamento.novo-pedido"] #ig/ref :handler/novos-pedidos}}
 
  [:mba-fiap.usecase.processar-pagamento/novos-pedidos :handler/novos-pedidos]
  {:repository/pagamento #ig/ref :repository/pagamento
@@ -28,7 +28,7 @@
  {:env #profile {:default :dev
                  :test :test
                  :prod :prod}
-  :port #long #profile {:default #or [#env HTTP_PORT 8080]}
+  :port #long #profile {:default #or [#env HTTP_PORT 8081]}
   :join? #profile {:default true
                    :test false
                    :dev false}
